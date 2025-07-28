@@ -2,37 +2,40 @@ const prisma = require("../../prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { loginSchema } = require("../../validators/user.validator");
+const { z } = require("zod");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = "1h";
+const DUMMY_HASH = "$2b$10$CwTycUXWue0Thq9StjUM0uJ8U5vOXk3ih6f4HZni9eN5vKGqDqm.e";
 
 module.exports = async (req, res) => {
   try {
-    // Validate input
     const { email, password } = loginSchema.parse(req.body);
 
-    // Find user by email
     const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
+    const hashedPassword = user ? user.password : DUMMY_HASH;
+
+    const validPassword = await bcrypt.compare(password, hashedPassword);
+
+    if (!user || !validPassword) {
+      // random timeout to mislead possible timing attacks
+      const randomMs = Math.floor(Math.random() * (500 - 10 + 1)) + 100;
+      await new Promise((res) => setTimeout(res, randomMs));
+
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Compare password
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
-
-    // Generate JWT
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 
-    // Return token (and optionally user info)
     res.json({ token, user: { id: user.id, email: user.email } });
-  } catch (err) {
-    if (err instanceof loginSchema.constructor) {
-      return res.status(400).json({ error: err.errors });
+  } catch (error) {
+    const isZodErr = error instanceof z.ZodError;
+
+    if (isZodErr) {
+      return res.status(400).json({ error: error.errors });
     }
-    console.error("Login error:", err);
+
+    console.error("Login error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
