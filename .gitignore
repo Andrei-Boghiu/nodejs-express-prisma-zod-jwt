@@ -15,6 +15,9 @@ yarn-error.log*
 prisma/dev.db
 prisma/dev.db-journal
 
+# just a scrappy project, I won't care
+prisma/migrations 
+
 # OS-specific
 .DS_Store
 Thumbs.db

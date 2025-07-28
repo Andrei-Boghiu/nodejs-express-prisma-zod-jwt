@@ -14,7 +14,7 @@ app.use(helmet());
 app.use(express.json());
 
 // routes
-app.use("/api/users", userRoutes);
+app.use("/api/auth", userRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 
