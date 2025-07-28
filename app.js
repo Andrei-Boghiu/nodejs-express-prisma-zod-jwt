@@ -6,12 +6,15 @@ const userRoutes = require("./routes/user.routes");
 const projectRoutes = require("./routes/project.routes");
 const taskRoutes = require("./routes/task.routes");
 
+const rateLimiter = require("./middlewares/rateLimiter.middleware");
+
 const app = express();
 
 // middleware
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
+app.use(rateLimiter);
 
 // routes
 app.use("/api/auth", userRoutes);
