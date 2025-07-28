@@ -85,3 +85,20 @@ src/
 
 **Postman** for testing endpoints.
 Auth-protected routes require a Bearer token from the login response.
+
+## 🧠 Planned Features (AI/MCP Integration)
+
+- 🧩 **Auto Task Generator**  
+  Generate a list of tasks based on a project description using AI.
+
+- 💬 **Natural Language Task Updates**  
+  Let users describe progress in plain English and automatically update tasks.
+
+- 📝 **Meeting Notes to Tasks**  
+  Convert meeting notes or brainstorms into structured, actionable tasks.
+
+- ✅ **Task Quality Checker**  
+  Evaluate completed tasks for clarity, completeness, and relevance.
+
+- 📊 **Weekly Summary Assistant**  
+  Generate weekly summaries of project activity and highlight progress or blockers.
