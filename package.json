@@ -1,7 +1,7 @@
 {
   "name": "nodejs-express-prisma-zod-jwt",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Node.js REST API using Express, Prisma ORM, Zod validation, and JWT authentication.",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
@@ -9,8 +9,25 @@
     "prisma:dev": "prisma migrate reset --force && prisma generate",
     "prisma:prod": "prisma generate && prisma migrate deploy"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "node",
+    "express",
+    "prisma",
+    "zod",
+    "jwt",
+    "authentication",
+    "rest-api",
+    "secure-api",
+    "backend"
+  ],
+  "author": {
+    "name": "Andrei Boghiu",
+    "url": "https://github.com/Andrei-Boghiu"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/Andrei-Boghiu/nodejs-express-prisma-zod-jwt"
+  },
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {

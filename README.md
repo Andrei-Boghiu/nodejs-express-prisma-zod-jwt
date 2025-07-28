@@ -33,6 +33,16 @@ Use case: A lightweight project and task management system, similar to a simplif
 
 ---
 
+## 🧭 But Why?
+
+This project is part of a personal challenge to build the same app using different tech stacks. The goal is to deepen my understanding beyond just syntax—focusing instead on architecture, tooling, and real-world development practices.
+
+For this first version, I intentionally chose a less comfortable stack (JavaScript without TypeScript) to expose its weaknesses and better appreciate the strengths of statically typed environments. The lack of type safety and compile-time checks definitely made development harder and more error-prone, but it also made me value tools like TypeScript and languages like Java even more.
+
+As I complete the same app with other stacks, I’ll update this documentation with links and insights.
+
+---
+
 ## 🚀 Features
 
 - ✅ User registration & login with hashed passwords
@@ -48,7 +58,7 @@ Use case: A lightweight project and task management system, similar to a simplif
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/nodejs-express-prisma-zod-jwt
+git clone https://github.com/Andrei-Boghiu/nodejs-express-prisma-zod-jwt
 
 # Install dependencies
 npm install
@@ -57,26 +67,12 @@ npm install
 cp .env.example .env
 
 # Initialize Prisma
-npx prisma generate
-npx prisma migrate dev --name init
+npm run prisma:dev
+## or
+npm run prisma:prod
 
 # Run the server
 npm run dev
-```
-
----
-
-## 📂 Folder Structure (Simplified)
-
-```
-src/
-├── controllers/
-├── middlewares/
-├── routes/
-├── models/ (Prisma schema)
-├── utils/
-├── app.js
-└── server.js
 ```
 
 ---
