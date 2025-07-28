@@ -1,4 +1,5 @@
 const prisma = require("../../prisma/client");
+const handleError = require("../../utils/handleError.util");
 
 module.exports = async (req, res) => {
   try {
@@ -9,8 +10,7 @@ module.exports = async (req, res) => {
     });
 
     res.json(tasks);
-  } catch (err) {
-    console.error("Get tasks error:", err);
-    res.status(500).json({ error: "Internal server error" });
+  } catch (error) {
+    return handleError(error, res, "getTasks.controller");
   }
 };

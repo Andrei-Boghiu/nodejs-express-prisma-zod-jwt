@@ -2,7 +2,7 @@ const prisma = require("../../prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { loginSchema } = require("../../validators/user.validator");
-const { z } = require("zod");
+const handleError = require("../../utils/handleError.util");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRES_IN = "1h";
@@ -29,13 +29,6 @@ module.exports = async (req, res) => {
 
     res.json({ token, user: { id: user.id, email: user.email } });
   } catch (error) {
-    const isZodErr = error instanceof z.ZodError;
-
-    if (isZodErr) {
-      return res.status(400).json({ error: error.errors });
-    }
-
-    console.error("Login error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    return handleError(error, res, "login.controller");
   }
 };

@@ -1,4 +1,5 @@
 const prisma = require("../../prisma/client");
+const handleError = require("../../utils/handleError.util");
 const { createTaskSchema } = require("../../validators/task.validator");
 
 module.exports = async (req, res) => {
@@ -15,11 +16,7 @@ module.exports = async (req, res) => {
     });
 
     res.status(201).json(task);
-  } catch (err) {
-    if (err.name === "ZodError") {
-      return res.status(400).json({ error: err.errors });
-    }
-    console.error("Create task error:", err);
-    res.status(500).json({ error: "Internal server error" });
+  } catch (error) {
+    return handleError(error, res, "createTask.controller");
   }
 };

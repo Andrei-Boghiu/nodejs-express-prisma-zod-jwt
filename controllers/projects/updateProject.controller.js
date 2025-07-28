@@ -1,5 +1,6 @@
-const prisma = require('../../prisma/client');
-const { updateProjectSchema } = require('../../validators/project.validator');
+const prisma = require("../../prisma/client");
+const handleError = require("../../utils/handleError.util");
+const { updateProjectSchema } = require("../../validators/project.validator");
 
 module.exports = async (req, res) => {
   try {
@@ -13,7 +14,7 @@ module.exports = async (req, res) => {
     });
 
     if (!existingProject) {
-      return res.status(404).json({ error: 'Project not found or unauthorized' });
+      return res.status(404).json({ error: "Project not found or unauthorized" });
     }
 
     const updatedProject = await prisma.project.update({
@@ -22,11 +23,7 @@ module.exports = async (req, res) => {
     });
 
     res.json(updatedProject);
-  } catch (err) {
-    if (err instanceof Error && err.name === 'ZodError') {
-      return res.status(400).json({ error: err.errors });
-    }
-    console.error('Update project error:', err);
-    res.status(500).json({ error: 'Internal server error' });
+  } catch (error) {
+    return handleError(error, res, "updateProject.controller");
   }
 };

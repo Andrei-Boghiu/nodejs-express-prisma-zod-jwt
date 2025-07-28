@@ -1,4 +1,5 @@
 const prisma = require("../../prisma/client");
+const handleError = require("../../utils/handleError.util");
 const { createProjectSchema } = require("../../validators/project.validator");
 
 module.exports = async (req, res) => {
@@ -11,11 +12,7 @@ module.exports = async (req, res) => {
     });
 
     res.status(201).json(project);
-  } catch (err) {
-    if (err instanceof Error && err.name === "ZodError") {
-      return res.status(400).json({ error: err.errors });
-    }
-    console.error("Create project error:", err);
-    res.status(500).json({ error: "Internal server error" });
+  } catch (error) {
+    return handleError(error, res, "createProject.controller");
   }
 };

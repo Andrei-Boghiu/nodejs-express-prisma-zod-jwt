@@ -1,4 +1,5 @@
 const prisma = require("../../prisma/client");
+const handleError = require("../../utils/handleError.util");
 
 module.exports = async (req, res) => {
   try {
@@ -16,8 +17,7 @@ module.exports = async (req, res) => {
     await prisma.task.delete({ where: { id } });
 
     res.status(204).send();
-  } catch (err) {
-    console.error("Delete task error:", err);
-    res.status(500).json({ error: "Internal server error" });
+  } catch (error) {
+    return handleError(error, res, "deleteTask.controller");
   }
 };

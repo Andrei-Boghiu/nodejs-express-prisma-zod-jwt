@@ -1,4 +1,5 @@
 const prisma = require("../../prisma/client");
+const handleError = require("../../utils/handleError.util");
 const { updateTaskSchema } = require("../../validators/task.validator");
 
 module.exports = async (req, res) => {
@@ -21,11 +22,7 @@ module.exports = async (req, res) => {
     });
 
     res.json(updatedTask);
-  } catch (err) {
-    if (err.name === "ZodError") {
-      return res.status(400).json({ error: err.errors });
-    }
-    console.error("Update task error:", err);
-    res.status(500).json({ error: "Internal server error" });
+  } catch (error) {
+    return handleError(error, res, "updateTask.controller");
   }
 };
