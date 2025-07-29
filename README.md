@@ -35,7 +35,7 @@ Use case: A lightweight project and task management system, similar to a simplif
 
 ## 🧭 But Why?
 
-This project is part of a personal challenge to build the same app using different tech stacks. The goal is to deepen my understanding beyond just syntax—focusing instead on architecture, tooling, and real-world development practices.
+This project is part of a personal challenge to build the same app using different tech stacks. The goal is to deepen my understanding beyond just syntax, but rather focusing on architecture, tooling, and real-world development practices.
 
 For this first version, I intentionally chose a less comfortable stack (JavaScript without TypeScript) to expose its weaknesses and better appreciate the strengths of statically typed environments. The lack of type safety and compile-time checks definitely made development harder and more error-prone, but it also made me value tools like TypeScript and languages like Java even more.
 
@@ -81,20 +81,3 @@ npm run dev
 
 **Postman** for testing endpoints.
 Auth-protected routes require a Bearer token from the login response.
-
-## 🧠 Planned Features (AI/MCP Integration)
-
-- 🧩 **Auto Task Generator**  
-  Generate a list of tasks based on a project description using AI.
-
-- 💬 **Natural Language Task Updates**  
-  Let users describe progress in plain English and automatically update tasks.
-
-- 📝 **Meeting Notes to Tasks**  
-  Convert meeting notes or brainstorms into structured, actionable tasks.
-
-- ✅ **Task Quality Checker**  
-  Evaluate completed tasks for clarity, completeness, and relevance.
-
-- 📊 **Weekly Summary Assistant**  
-  Generate weekly summaries of project activity and highlight progress or blockers.
