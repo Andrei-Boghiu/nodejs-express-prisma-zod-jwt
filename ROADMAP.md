@@ -29,7 +29,7 @@ A forward-looking plan for the `nodejs-express-prisma-zod-jwt` project.
 
 - [ ] Add tests (unit, integration, E2E)
 - [ ] Use ESLint + Prettier for consistent code style
-- [ ] Add commit linting (`commitlint`, `husky`)
+- [ ] Add commit linting (`commitlint`, `husky`, `dotenvx ext precommit`)
 
 ---
 
