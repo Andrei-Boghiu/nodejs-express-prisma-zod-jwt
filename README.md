@@ -12,6 +12,7 @@ This API manages three main entities:
 - **Users**: Can register, log in, and create projects.
 - **Projects**: Belong to users. Each project can contain multiple tasks.
 - **Tasks**: Linked to projects and assigned to users. Tasks have a status (e.g., completed or not).
+- **Comments**: Linked to tasks and created by users.
 
 Use case: A lightweight project and task management system, similar to a simplified version of Trello or Asana.
 

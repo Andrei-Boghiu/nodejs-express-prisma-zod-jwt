@@ -1,7 +1,7 @@
 const { z } = require("zod");
 
 const createTaskSchema = z.object({
-  title: z.string().min(1, "Task title is required"),
+  title: z.string("Task title is required").min(1),
   completed: z.boolean().optional(),
   projectId: z.uuid("Valid project ID is required"),
   userId: z.uuid("Valid user ID is required").optional(),

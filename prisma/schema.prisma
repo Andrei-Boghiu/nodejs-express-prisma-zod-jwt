@@ -1,34 +1,45 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
-  id       String   @id @default(uuid())
-  email    String   @unique
-  password String
-  projects Project[]
-  tasks    Task[]
+    id       String    @id @default(uuid())
+    email    String    @unique
+    password String
+    projects Project[]
+    tasks    Task[]
+    comments Comment[]
 }
 
 model Project {
-  id        String  @id @default(uuid())
-  name      String
-  ownerId   String
-  owner     User    @relation(fields: [ownerId], references: [id])
-  tasks     Task[]
+    id      String @id @default(uuid())
+    name    String
+    ownerId String
+    owner   User   @relation(fields: [ownerId], references: [id])
+    tasks   Task[]
 }
 
 model Task {
-  id         String   @id @default(uuid())
-  title      String
-  completed  Boolean  @default(false)
-  userId     String
-  projectId  String
-  user       User     @relation(fields: [userId], references: [id])
-  project    Project  @relation(fields: [projectId], references: [id])
+    id        String    @id @default(uuid())
+    title     String
+    completed Boolean   @default(false)
+    userId    String
+    projectId String
+    user      User      @relation(fields: [userId], references: [id])
+    project   Project   @relation(fields: [projectId], references: [id])
+    comments  Comment[]
+}
+
+model Comment {
+    id      String @id @default(uuid())
+    content String
+    taskId  String
+    userId  String
+    task    Task   @relation(fields: [taskId], references: [id])
+    user    User   @relation(fields: [userId], references: [id])
 }
