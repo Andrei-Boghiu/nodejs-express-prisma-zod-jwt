@@ -18,7 +18,7 @@ A forward-looking plan for the `nodejs-express-prisma-zod-jwt` project.
 - ~~Secure headers via Helmet~~
 - ~~Basic rate limiting~~
 - ~~Introduce centralized error handler utility~~
-- [ ] Add pagination and limit/offset query support for list endpoints
+- ~~Add pagination and limit/skip query support for list endpoints~~
 - [ ] Add `comments` entity (e.g., tasks can have multiple comments)
 - [ ] Expand the columns for `projects`, `tasks`, and `users` entities
 - [ ] Add filtering and sorting capabilities
