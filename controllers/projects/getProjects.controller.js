@@ -1,13 +1,14 @@
 const prisma = require("../../prisma/client");
 const handleError = require("../../utils/handleError.util");
+const { getPaginationParams } = require("../../utils/pagination.util");
 
 module.exports = async (req, res) => {
   try {
     const ownerId = req.user.id;
 
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 25;
-    const skip = (page - 1) * limit;
+    const pageStr = req.query.page;
+    const limitStr = req.query.limit;
+    const { page, limit, skip } = getPaginationParams(pageStr, limitStr);
 
     const [projects, total] = await Promise.all([
       prisma.project.findMany({
@@ -19,7 +20,7 @@ module.exports = async (req, res) => {
       prisma.project.count({ where: { ownerId } }),
     ]);
 
-    res.json({
+    res.status(200).json({
       data: projects,
       meta: {
         total,
