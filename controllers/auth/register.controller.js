@@ -1,6 +1,6 @@
 const prisma = require("../../prisma/client");
 const bcrypt = require("bcrypt");
-const { registerSchema } = require("../../validators/user.validator");
+const { registerSchema } = require("../../validators/auth.validator");
 const handleError = require("../../utils/handleError.util");
 
 module.exports = async (req, res) => {
