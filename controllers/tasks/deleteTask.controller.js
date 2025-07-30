@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     const userId = req.user.id;
     const { id } = req.params;
 
-    const task = await prisma.task.findFirst({
+    const task = await prisma.task.findUnique({
       where: { id, userId },
     });
 
@@ -14,7 +14,9 @@ module.exports = async (req, res) => {
       return res.status(404).json({ error: "Task not found or unauthorized" });
     }
 
-    await prisma.task.delete({ where: { id } });
+    await prisma.task.delete({
+      where: { id, userId },
+    });
 
     res.status(204).send();
   } catch (error) {
