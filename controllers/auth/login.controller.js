@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     const validPassword = await bcrypt.compare(password, hashedPassword);
 
     if (!user || !validPassword) {
-      // random timeout to mislead possible timing attacks
+      // ? random timeout to mislead possible timing attacks
       const randomMs = Math.floor(Math.random() * (500 - 10 + 1)) + 100;
       await new Promise((res) => setTimeout(res, randomMs));
 

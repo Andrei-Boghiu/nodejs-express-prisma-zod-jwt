@@ -8,10 +8,8 @@ const getTaskById = require("../controllers/tasks/getTaskById.controller");
 const updateTask = require("../controllers/tasks/updateTask.controller");
 const deleteTask = require("../controllers/tasks/deleteTask.controller");
 
-// protect all task routes
 router.use(authMiddleware);
 
-// CRUD routes
 router.post("/", createTask);
 router.get("/", getTasks);
 router.get("/:id", getTaskById);

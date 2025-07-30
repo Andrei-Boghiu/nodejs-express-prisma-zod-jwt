@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
     const { id } = req.params;
     const data = updateProjectSchema.parse(req.body);
 
-    // Verify ownership before update
+    // ? verify ownership before update (e.g., cannot update a project own by another user)
     const existingProject = await prisma.project.findFirst({
       where: { id, ownerId },
     });

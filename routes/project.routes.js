@@ -8,10 +8,8 @@ const getProjectById = require("../controllers/projects/getProjectById.controlle
 const updateProject = require("../controllers/projects/updateProject.controller");
 const deleteProject = require("../controllers/projects/deleteProject.controller");
 
-// protect all project routes
 router.use(authMiddleware);
 
-// CRUD routes
 router.post("/", createProject);
 router.get("/", getProjects);
 router.get("/:id", getProjectById);

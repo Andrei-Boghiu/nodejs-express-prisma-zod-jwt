@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     const ownerId = req.user.id;
     const { id } = req.params;
 
-    // Verify ownership before deletion (e.g., cannot delete the comment owned by another user)
+    // ? verify ownership before deletion (e.g., cannot delete the comment owned by another user)
     const existingComment = await prisma.comment.findFirst({
       where: { id, ownerId },
     });

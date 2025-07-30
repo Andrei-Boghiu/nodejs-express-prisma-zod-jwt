@@ -8,11 +8,12 @@ const taskRoutes = require("./routes/task.routes");
 const commentRoutes = require("./routes/comment.routes");
 
 const rateLimiter = require("./middlewares/rateLimiter.middleware");
+const fallbackHandler = require("./utils/fallbackHandler.util");
 
 const app = express();
 
 // middleware
-app.use(cors());
+app.use(cors()); // ! config object missing. TO UPDATE LATER
 app.use(helmet());
 app.use(express.json());
 app.use(rateLimiter);
@@ -23,8 +24,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/comments", commentRoutes);
 
-app.get("/", (_, res) => {
-  res.send("API is running...");
-});
+// fallback route handler
+app.use(fallbackHandler);
 
 module.exports = app;

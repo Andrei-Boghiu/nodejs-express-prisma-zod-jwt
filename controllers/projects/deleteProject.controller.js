@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     const ownerId = req.user.id;
     const { id } = req.params;
 
-    // Verify ownership before deletion
+    // ? verify ownership before deletion (e.g., cannot delete the project owned by another user)
     const existingProject = await prisma.project.findFirst({
       where: { id, ownerId },
     });

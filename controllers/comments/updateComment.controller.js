@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
     const { id } = req.params;
     const data = updateCommentSchema.parse(req.body);
 
-    // Verify ownership before updating (e.g., cannot update the comment owned by another user)
+    // ? verify ownership before updating (e.g., cannot update the comment owned by another user)
     const existingComment = await prisma.comment.findFirst({
       where: { id, ownerId },
     });
