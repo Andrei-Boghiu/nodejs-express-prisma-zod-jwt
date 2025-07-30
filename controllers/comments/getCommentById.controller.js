@@ -5,7 +5,7 @@ module.exports = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const comment = await prisma.comment.findFirst({
+    const comment = await prisma.comment.findUnique({
       where: { id },
     });
 

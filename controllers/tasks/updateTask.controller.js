@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
     const { id } = req.params;
     const data = updateTaskSchema.parse(req.body);
 
-    const existingTask = await prisma.task.findFirst({
+    const existingTask = await prisma.task.findUnique({
       where: { id, userId },
     });
 

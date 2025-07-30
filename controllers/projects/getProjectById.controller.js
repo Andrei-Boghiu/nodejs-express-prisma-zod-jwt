@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     const ownerId = req.user.id;
     const { id } = req.params;
 
-    const project = await prisma.project.findFirst({
+    const project = await prisma.project.findUnique({
       where: { id, ownerId },
     });
 
