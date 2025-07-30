@@ -1,7 +1,7 @@
 const prisma = require("../../prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { loginSchema } = require("../../validators/user.validator");
+const { loginSchema } = require("../../validators/auth.validator");
 const handleError = require("../../utils/handleError.util");
 
 const JWT_SECRET = process.env.JWT_SECRET;
