@@ -20,7 +20,7 @@ A forward-looking plan for the `nodejs-express-prisma-zod-jwt` project.
 - ~~Introduce centralized error handler utility~~
 - ~~Add pagination and limit/skip query support for list endpoints~~
 - ~~Add `comments` entity (e.g., tasks can have multiple comments)~~
-- [ ] Fix issue where `auth` and `users` are used interchangeably (e.g., create separation of concerns between `auth` and `users`)
+- ~~Fix issue where `auth` and `users` are used interchangeably (e.g., create separation of concerns between `auth` and `users`)~~
 - [ ] Expand the columns for `projects`, `tasks`, and `users` entities
 - [ ] Add filtering and sorting capabilities
 
