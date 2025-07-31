@@ -121,11 +121,11 @@ model Task {
     status      Status    @default(PLANNING)
     dueDate     DateTime?
 
-    userId      String
+    userId      String?
     milestoneId String
 
     comments  Comment[]
-    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
     milestone Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
 
     createdAt     DateTime @default(now())
