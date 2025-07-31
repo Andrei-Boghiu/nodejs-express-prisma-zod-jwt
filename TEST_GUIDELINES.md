@@ -77,8 +77,8 @@
 ### ❌ Failure Cases
 
 - [ ] Assigning a task or collaborator role to an inactive user should fail.
-- [ ] A user cannot deactivate themselves while still owning a project without delegating ownership.
-- [ ] The system should prevent inactivation if no active user is available for ownership transfer.
+- [ ] A user cannot deactivate themselves while still owning a project without first delegating ownership or deleting the project.
+- [ ] The system should prevent inactivation if the user owns projects and no eligible active users are available for ownership transfer.
 
 ---
 
