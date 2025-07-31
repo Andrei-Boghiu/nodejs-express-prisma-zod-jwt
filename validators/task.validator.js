@@ -1,18 +1,17 @@
 const { z } = require("zod");
+const { priorityEnum, statusEnum, description, optionalDatetime } = require("./zod.config");
 
 const createTaskSchema = z.object({
-  title: z.string("Task title is required").min(1),
-  completed: z.boolean().optional(),
-  projectId: z.uuid("Valid project ID is required"),
-  userId: z.uuid("Valid user ID is required").optional(),
+  title: z.string().min(1, "Task title is required"),
+  description,
+  priority: priorityEnum.optional(),
+  status: statusEnum.optional(),
+  dueDate: optionalDatetime,
+  userId: z.uuid().optional().nullable(),
+  milestoneId: z.uuid(),
 });
 
-const updateTaskSchema = z.object({
-  title: z.string().min(1, "Task title is required").optional(),
-  completed: z.boolean().optional(),
-  projectId: z.uuid().optional(),
-  userId: z.uuid().optional(),
-});
+const updateTaskSchema = createTaskSchema.partial();
 
 module.exports = {
   createTaskSchema,
