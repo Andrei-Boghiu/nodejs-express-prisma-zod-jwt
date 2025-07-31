@@ -161,8 +161,10 @@ model Collaborator {
 
     createdAt DateTime @default(now())
     createdBy String
+    createdByUser User @relation("CollaboratorCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
     updatedAt DateTime @updatedAt
     updatedBy String?
+    updatedByUser User? @relation("CollaboratorUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
 
     deletedAt DateTime?
     deletedBy String?
