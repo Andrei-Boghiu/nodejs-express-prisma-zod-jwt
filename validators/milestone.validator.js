@@ -8,10 +8,9 @@ const createMilestoneSchema = z.object({
   status: statusEnum.optional(),
   startDate: optionalDatetime,
   endDate: optionalDatetime,
-  projectId: z.uuid(),
 });
 
-const updateMilestoneSchema = createMilestoneSchema.partial().omit({ projectId: true });
+const updateMilestoneSchema = createMilestoneSchema.partial();
 
 module.exports = {
   createMilestoneSchema,

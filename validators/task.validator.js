@@ -1,5 +1,5 @@
 const { z } = require("zod");
-const { priorityEnum, statusEnum, description, optionalDatetime } = require("../config/validation-config");
+const { priorityEnum, statusEnum, description, optionalDatetime } = require("./zod.config");
 
 const createTaskSchema = z.object({
   title: z.string().min(1, "Task title is required"),
@@ -7,8 +7,7 @@ const createTaskSchema = z.object({
   priority: priorityEnum.optional(),
   status: statusEnum.optional(),
   dueDate: optionalDatetime,
-  userId: z.uuid().optional(),
-  milestoneId: z.uuid(),
+  assigneeId: z.uuid().optional().nullable(),
 });
 
 const updateTaskSchema = createTaskSchema.partial();

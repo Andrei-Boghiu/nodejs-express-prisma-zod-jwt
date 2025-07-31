@@ -4,13 +4,13 @@ const { updateCommentSchema } = require("../../validators/comment.validator");
 
 module.exports = async (req, res) => {
   try {
-    const ownerId = req.user.id;
-    const { id } = req.params;
     const data = updateCommentSchema.parse(req.body);
+    const userId = req.user.id;
+    const { id } = req.params;
 
     // ? verify ownership before updating (e.g., cannot update the comment owned by another user)
-    const existingComment = await prisma.comment.findUnique({
-      where: { id, ownerId },
+    const existingComment = await prisma.comment.findFirst({
+      where: { id, userId },
     });
 
     if (!existingComment) {
@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
     }
 
     const updatedComment = await prisma.comment.update({
-      where: { id, ownerId },
+      where: { id, userId },
       data,
     });
 

@@ -6,7 +6,14 @@ module.exports = async (req, res) => {
     const { id } = req.params;
 
     const comment = await prisma.comment.findUnique({
-      where: { id },
+      where: {
+        id,
+        task: {
+          milestone: {
+            project: { OR: [{ visibility: "PUBLIC" }, { Memberships: { some: { userId, hasAccepted: true } } }] },
+          },
+        },
+      },
     });
 
     if (!comment) {
