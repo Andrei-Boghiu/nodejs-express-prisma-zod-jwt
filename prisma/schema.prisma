@@ -21,14 +21,19 @@ model User {
     updatedAt    DateTime  @updatedAt
     lastLoginAt  DateTime?
 
-    logs           Log[]
-    comments       Comment[]
-    collaborations Collaborator[]
+    logs     Log[]
+    comments Comment[]
+
+    collaborations       Collaborator[]
+    createdCollaborators Collaborator[] @relation("CollaboratorCreatedBy")
+    updatedCollaborators Collaborator[] @relation("CollaboratorUpdatedBy")
+    deletedCollaborators Collaborator[] @relation("CollaboratorDeletedBy")
 
     createdProjects Project[] @relation("ProjectCreatedBy")
     updatedProjects Project[] @relation("ProjectUpdatedBy")
     deletedProjects Project[] @relation("ProjectDeletedBy")
 
+    milestones        Milestone[]
     createdMilestones Milestone[] @relation("MilestoneCreatedBy")
     updatedMilestones Milestone[] @relation("MilestoneUpdatedBy")
     deletedMilestones Milestone[] @relation("MilestoneDeletedBy")
@@ -46,7 +51,6 @@ model Log {
     entity    String // Entity type (e.g. "Task", "Project", "Comment")
     entityId  String // ID of the affected entity
     message   String? @db.Text // Optional descriptive message
-    ipAddress String? // User's IP address (if available)
     userAgent String? // Browser/device info
     metadata  Json? // Flexible field to store extra contextual data
     tag       String? // Optional: custom label (e.g., "security", "system")
@@ -69,44 +73,44 @@ model Project {
     milestones    Milestone[]
     collaborators Collaborator[]
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    deletedAt DateTime?
+    createdAt     DateTime @default(now())
+    createdBy     String
+    createdByUser User     @relation("ProjectCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
 
-    createdBy     String?
-    createdByUser User?   @relation("ProjectCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+    updatedAt     DateTime @updatedAt
+    updatedBy     String
+    updatedByUser User     @relation("ProjectUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
 
-    updatedBy     String?
-    updatedByUser User?   @relation("ProjectUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
-
+    deletedAt     DateTime?
     deletedBy     String?
-    deletedByUser User?   @relation("ProjectDeletedBy", fields: [deletedBy], references: [id], onDelete: Cascade)
+    deletedByUser User?     @relation("ProjectDeletedBy", fields: [deletedBy], references: [id], onDelete: Cascade)
 }
 
 model Milestone {
-    id          String    @id @default(uuid())
-    name        String
-    description String?   @db.Text
-    status      Status    @default(PLANNING)
-    startDate   DateTime?
-    endDate     DateTime?
-    projectId   String
+    id           String    @id @default(uuid())
+    name         String
+    description  String?   @db.Text
+    supervisorId String?
+    status       Status    @default(PLANNING)
+    startDate    DateTime?
+    endDate      DateTime?
+    projectId    String
 
-    tasks   Task[]
-    project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+    supervisor User?   @relation(fields: [supervisorId], references: [id], onDelete: Cascade)
+    tasks      Task[]
+    project    Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    deletedAt DateTime?
+    createdAt     DateTime @default(now())
+    createdBy     String
+    createdByUser User     @relation("MilestoneCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
 
-    createdBy     String?
-    createdByUser User?   @relation("MilestoneCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+    updatedAt     DateTime @updatedAt
+    updatedBy     String
+    updatedByUser User     @relation("MilestoneUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
 
-    updatedBy     String?
-    updatedByUser User?   @relation("MilestoneUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
-
+    deletedAt     DateTime?
     deletedBy     String?
-    deletedByUser User?   @relation("MilestoneDeletedBy", fields: [deletedBy], references: [id], onDelete: Cascade)
+    deletedByUser User?     @relation("MilestoneDeletedBy", fields: [deletedBy], references: [id], onDelete: Cascade)
 }
 
 model Task {
@@ -120,22 +124,21 @@ model Task {
     userId      String
     milestoneId String
 
+    comments  Comment[]
     user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     milestone Milestone @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
-    comments  Comment[]
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    deletedAt DateTime?
+    createdAt     DateTime @default(now())
+    createdBy     String
+    createdByUser User     @relation("TaskCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
 
-    createdBy     String?
-    createdByUser User?   @relation("TaskCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
+    updatedAt     DateTime @updatedAt
+    updatedBy     String
+    updatedByUser User     @relation("TaskUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
 
-    updatedBy     String?
-    updatedByUser User?   @relation("TaskUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
-
+    deletedAt     DateTime?
     deletedBy     String?
-    deletedByUser User?   @relation("TaskDeletedBy", fields: [deletedBy], references: [id], onDelete: Cascade)
+    deletedByUser User?     @relation("TaskDeletedBy", fields: [deletedBy], references: [id], onDelete: Cascade)
 }
 
 model Comment {
@@ -159,15 +162,17 @@ model Collaborator {
     hasAccepted Boolean          @default(false)
     role        CollaboratorRole @default(MEMBER)
 
-    createdAt DateTime @default(now())
-    createdBy String
-    createdByUser User @relation("CollaboratorCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
-    updatedAt DateTime @updatedAt
-    updatedBy String?
-    updatedByUser User? @relation("CollaboratorUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
+    createdAt     DateTime @default(now())
+    createdBy     String
+    createdByUser User     @relation("CollaboratorCreatedBy", fields: [createdBy], references: [id], onDelete: Cascade)
 
-    deletedAt DateTime?
-    deletedBy String?
+    updatedAt     DateTime @updatedAt
+    updatedBy     String
+    updatedByUser User     @relation("CollaboratorUpdatedBy", fields: [updatedBy], references: [id], onDelete: Cascade)
+
+    deletedAt     DateTime?
+    deletedBy     String?
+    deletedByUser User?     @relation("CollaboratorDeletedBy", fields: [deletedBy], references: [id], onDelete: Cascade)
 
     project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
     user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
