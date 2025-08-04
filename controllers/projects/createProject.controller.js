@@ -4,14 +4,33 @@ const { createProjectSchema } = require("../../validators/project.validator");
 
 module.exports = async (req, res) => {
   try {
-    const { name } = createProjectSchema.parse(req.body);
-    const ownerId = req.user.id;
+    const data = createProjectSchema.parse(req.body);
+    const userId = req.user.id;
 
-    const project = await prisma.project.create({
-      data: { name, ownerId },
+    const newProject = await prisma.$transaction(async (tx) => {
+      const project = await tx.project.create({
+        data: {
+          ...data,
+          createdByUser: { connect: { id: userId } },
+          updatedByUser: { connect: { id: userId } },
+        },
+      });
+
+      await tx.membership.create({
+        data: {
+          role: "OWNER",
+          hasAccepted: true,
+          createdByUser: { connect: { id: userId } },
+          updatedByUser: { connect: { id: userId } },
+          project: { connect: { id: project.id } },
+          user: { connect: { id: userId } },
+        },
+      });
+
+      return project;
     });
 
-    res.status(201).json(project);
+    res.status(201).json(newProject);
   } catch (error) {
     return handleError(error, res, "createProject.controller");
   }

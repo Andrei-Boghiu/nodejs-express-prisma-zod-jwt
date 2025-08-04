@@ -10,9 +10,9 @@ const deleteTask = require("../controllers/tasks/deleteTask.controller");
 
 router.use(authMiddleware);
 
-router.post("/", createTask);
-router.get("/", getTasks);
-router.get("/:id", getTaskById);
+router.post("/:milestoneId", createTask);
+router.get("/:milestoneId", getTasks);
+router.get("/id/:id", getTaskById);
 router.put("/:id", updateTask);
 router.delete("/:id", deleteTask);
 

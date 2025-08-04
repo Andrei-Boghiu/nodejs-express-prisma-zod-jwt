@@ -4,6 +4,7 @@ const { getPaginationParams } = require("../../utils/pagination.util");
 
 module.exports = async (req, res) => {
   try {
+    const { milestoneId } = req.params;
     const userId = req.user.id;
 
     const pageStr = req.query.page;
@@ -12,12 +13,26 @@ module.exports = async (req, res) => {
 
     const [tasks, total] = await Promise.all([
       prisma.task.findMany({
-        where: { userId },
-        orderBy: { id: "asc" },
+        where: {
+          milestoneId,
+          OR: [
+            { milestone: { project: { Memberships: { some: { userId, hasAccepted: true } } } } },
+            { milestone: { project: { visibility: "PUBLIC" } } },
+          ],
+        },
+        orderBy: { createdAt: "asc" },
         skip,
         take: limit,
       }),
-      prisma.task.count({ where: { userId } }),
+      prisma.task.count({
+        where: {
+          milestoneId,
+          OR: [
+            { milestone: { project: { Memberships: { some: { userId, hasAccepted: true } } } } },
+            { milestone: { project: { visibility: "PUBLIC" } } },
+          ],
+        },
+      }),
     ]);
 
     res.status(200).json({

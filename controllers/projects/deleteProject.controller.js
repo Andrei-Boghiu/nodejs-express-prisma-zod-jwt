@@ -3,20 +3,27 @@ const handleError = require("../../utils/handleError.util");
 
 module.exports = async (req, res) => {
   try {
-    const ownerId = req.user.id;
+    const userId = req.user.id;
     const { id } = req.params;
 
-    // ? verify ownership before deletion (e.g., cannot delete the project owned by another user)
-    const existingProject = await prisma.project.findUnique({
-      where: { id, ownerId },
+    const authorization = await prisma.project.findFirst({
+      where: {
+        id,
+        Memberships: {
+          some: {
+            userId,
+            role: "OWNER",
+          },
+        },
+      },
     });
 
-    if (!existingProject) {
+    if (!authorization) {
       return res.status(404).json({ error: "Project not found or unauthorized" });
     }
 
     await prisma.project.delete({
-      where: { id, ownerId },
+      where: { id },
     });
 
     res.status(204).send();

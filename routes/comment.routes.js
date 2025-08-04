@@ -10,9 +10,9 @@ const deleteComment = require("../controllers/comments/deleteComment.controller"
 
 router.use(authMiddleware);
 
-router.post("/", createComment);
-router.get("/", getComments);
-router.get("/:id", getCommentById);
+router.post("/:taskId", createComment);
+router.get("/:taskId", getComments);
+router.get("/id/:id", getCommentById);
 router.put("/:id", updateComment);
 router.delete("/:id", deleteComment);
 

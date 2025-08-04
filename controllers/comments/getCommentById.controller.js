@@ -4,9 +4,17 @@ const handleError = require("../../utils/handleError.util");
 module.exports = async (req, res) => {
   try {
     const { id } = req.params;
+    const userId = req.user.id;
 
     const comment = await prisma.comment.findUnique({
-      where: { id },
+      where: {
+        id,
+        task: {
+          milestone: {
+            project: { OR: [{ visibility: "PUBLIC" }, { Memberships: { some: { userId, hasAccepted: true } } }] },
+          },
+        },
+      },
     });
 
     if (!comment) {

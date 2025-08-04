@@ -8,11 +8,18 @@ module.exports = async (req, res) => {
     const { id } = req.params;
     const data = updateTaskSchema.parse(req.body);
 
-    const existingTask = await prisma.task.findUnique({
-      where: { id, userId },
+    const authorization = await prisma.task.findFirst({
+      where: {
+        id,
+        milestone: {
+          project: {
+            Memberships: { some: { userId, role: { in: ["OWNER", "MANAGER", "CONTRIBUTOR"] } } },
+          },
+        },
+      },
     });
 
-    if (!existingTask) {
+    if (!authorization) {
       return res.status(404).json({ error: "Task not found or unauthorized" });
     }
 
