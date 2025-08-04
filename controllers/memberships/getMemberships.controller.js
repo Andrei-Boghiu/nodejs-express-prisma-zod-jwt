@@ -1,5 +1,6 @@
 const prisma = require("../../prisma/client");
 const handleError = require("../../utils/handleError.util");
+const { getPaginationParams } = require("../../utils/pagination.util");
 
 module.exports = async (req, res) => {
   try {

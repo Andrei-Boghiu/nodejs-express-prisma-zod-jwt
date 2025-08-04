@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
     const task = await prisma.task.create({
       data: {
         ...data,
-        assignee: assigneeId ? { connect: { id: assigneeId } } : {},
+        assignee: assigneeId ? { connect: { id: assigneeId } } : undefined,
         milestone: { connect: { id: milestoneId } },
         createdByUser: { connect: { id: userId } },
         updatedByUser: { connect: { id: userId } },

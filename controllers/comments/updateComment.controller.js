@@ -19,7 +19,10 @@ module.exports = async (req, res) => {
 
     const updatedComment = await prisma.comment.update({
       where: { id, userId },
-      data,
+      data: {
+        ...data,
+        updatedByUser: { connect: { id: userId } },
+      },
     });
 
     res.json(updatedComment);
