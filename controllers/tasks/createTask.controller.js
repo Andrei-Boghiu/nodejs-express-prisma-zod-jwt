@@ -12,13 +12,22 @@ module.exports = async (req, res) => {
       where: {
         id: milestoneId,
         project: {
-          Memberships: { some: { userId, role: { in: ["OWNER", "MANAGER", "CONTRIBUTOR"] } } },
+          Memberships: {
+            some: {
+              AND: [
+                { userId, role: { in: ["OWNER", "MANAGER", "CONTRIBUTOR"] } },
+                { userId: assigneeId, hasAccepted: true, role: { not: "VIEWER" } },
+              ],
+            },
+          },
         },
       },
     });
 
     if (!authorization) {
-      return res.status(404).json({ error: "Invalid milestoneId or unauthorized" });
+      return res.status(404).json({
+        error: "Invalid milestoneId, or invalid assigneeId, or unauthorized assigneeId, or unauthorized action",
+      });
     }
 
     const task = await prisma.task.create({
