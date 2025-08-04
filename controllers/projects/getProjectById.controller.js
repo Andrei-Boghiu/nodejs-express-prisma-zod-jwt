@@ -3,11 +3,28 @@ const handleError = require("../../utils/handleError.util");
 
 module.exports = async (req, res) => {
   try {
-    const ownerId = req.user.id;
+    const userId = req.user.id;
     const { id } = req.params;
 
-    const project = await prisma.project.findUnique({
-      where: { id, ownerId },
+    const project = await prisma.project.findFirst({
+      where: {
+        id,
+        AND: [
+          {
+            OR: [
+              { visibility: "PUBLIC" },
+              {
+                Memberships: {
+                  some: {
+                    userId,
+                    hasAccepted: true,
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
     });
 
     if (!project) {

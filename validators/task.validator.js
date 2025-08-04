@@ -7,8 +7,7 @@ const createTaskSchema = z.object({
   priority: priorityEnum.optional(),
   status: statusEnum.optional(),
   dueDate: optionalDatetime,
-  userId: z.uuid().optional().nullable(),
-  milestoneId: z.uuid(),
+  assigneeId: z.uuid().optional().nullable(),
 });
 
 const updateTaskSchema = createTaskSchema.partial();

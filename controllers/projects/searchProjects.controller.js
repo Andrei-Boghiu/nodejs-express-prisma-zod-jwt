@@ -4,36 +4,25 @@ const { getPaginationParams } = require("../../utils/pagination.util");
 
 module.exports = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const hasAccepted = req.query.hasAccepted;
+    const searchKeyword = req.query.search;
 
     const pageStr = req.query.page;
     const limitStr = req.query.limit;
 
     const { page, limit, skip } = getPaginationParams(pageStr, limitStr);
 
-    const where = { Memberships: { some: { userId } } };
-
-    switch (hasAccepted) {
-      case "true":
-        where.Memberships.some.hasAccepted = true;
-        break;
-      case "false":
-        where.Memberships.some.hasAccepted = false;
-        break;
-      default:
-        break;
+    const where = { visibility: "PUBLIC" };
+    if (searchKeyword) {
+      where.name = {
+        contains: searchKeyword,
+        mode: "insensitive",
+      };
     }
 
     const [projects, total] = await Promise.all([
       prisma.project.findMany({
         where,
-        include: {
-          Memberships: {
-            select: { role: true, hasAccepted: true },
-          },
-        },
-        orderBy: { id: "asc" },
+        orderBy: { createdAt: "desc" },
         skip,
         take: limit,
       }),
@@ -50,6 +39,6 @@ module.exports = async (req, res) => {
       },
     });
   } catch (error) {
-    return handleError(error, res, "getProjects.controller");
+    return handleError(error, res, "searchProjects.controller");
   }
 };
