@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
+const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
@@ -11,15 +12,19 @@ const taskRoutes = require("./routes/task.routes");
 const commentRoutes = require("./routes/comment.routes");
 
 const rateLimiter = require("./middlewares/rateLimiter.middleware");
+const loggerMiddleware = require("./middlewares/logger.middleware");
 const fallbackHandler = require("./utils/fallbackHandler.util");
 
+const corsConfig = require("./configs/cors.config");
 const app = express();
 
 // middleware
-app.use(cors()); // ! config object missing. TO UPDATE LATER
+app.use(loggerMiddleware);
+app.use(rateLimiter);
+app.use(cors(corsConfig));
 app.use(helmet());
 app.use(express.json());
-app.use(rateLimiter);
+app.use(cookieParser());
 
 // routes
 app.use("/api/auth", authRoutes);
