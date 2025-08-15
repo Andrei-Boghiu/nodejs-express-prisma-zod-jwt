@@ -1,4 +1,5 @@
 const prisma = require("../../prisma/client");
+const handleError = require("../../utils/handleError.util");
 
 module.exports = async (req, res) => {
   try {
@@ -11,7 +12,7 @@ module.exports = async (req, res) => {
     }
 
     res.status(200).json(user);
-  } catch {
-    return res.status(401).json({ error: "Invalid or expired token" });
+  } catch (error) {
+    return handleError(error, res, "refresh.controller");
   }
 };

@@ -19,14 +19,7 @@ module.exports = async (req, res, next) => {
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
     req.user = { id: decoded.userId, email: decoded.email };
     next();
-  } catch (err) {
-    const result = await refreshTokens(req, res);
-
-    if (result.error) {
-      return res.status(result.error.status).json({ error: result.error.message });
-    }
-
-    req.user = result.user;
-    next();
+  } catch {
+    return res.status(401).json({ error: "Unauthorized" });
   }
 };

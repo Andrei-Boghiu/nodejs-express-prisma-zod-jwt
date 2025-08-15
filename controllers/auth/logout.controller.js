@@ -1,3 +1,4 @@
+const prisma = require("../../prisma/client");
 const handleError = require("../../utils/handleError.util");
 const { COOKIE_OPTIONS } = require("../../configs/auth.config");
 

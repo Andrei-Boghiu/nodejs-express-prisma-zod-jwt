@@ -23,12 +23,15 @@ async function refreshTokens(req, res) {
       where: { id: decoded.userId },
     });
 
-    if (!user) {
-      return { error: { status: 401, message: "User not found" } };
-    }
-
-    if (user.refreshToken !== refreshToken) {
-      return { error: { status: 401, message: "Refresh token invalid" } };
+    if (!user || user.refreshToken !== refreshToken) {
+      // Potential token theft detected. Invalidate all sessions for this user.
+      if (user) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { refreshToken: null },
+        });
+      }
+      return { error: { status: 401, message: "Authentication error" } };
     }
 
     // Generate new tokens (rotation)
