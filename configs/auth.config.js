@@ -3,8 +3,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const ACCESS_TOKEN_EXPIRES_IN = "1h";
 const REFRESH_TOKEN_EXPIRES_IN = "7d";
 
-const COOKIE_REFRESH_AGE = 604800; // 7 days
-const COOKIE_ACCESS_AGE = 3600000; // 1 hours
+const COOKIE_REFRESH_AGE = 604800000; // 7 days in milliseconds
+const COOKIE_ACCESS_AGE = 3600000; // 1 hour in milliseconds
 const COOKIE_SECURE = process.env.NODE_ENV === "production";
 const COOKIE_SAME_SITE = "strict";
 const COOKIE_HTTP_ONLY = true;
