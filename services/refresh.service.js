@@ -31,6 +31,8 @@ async function refreshTokens(req, res) {
           data: { refreshToken: null },
         });
       }
+      res.clearCookie("accessToken", COOKIE_OPTIONS);
+      res.clearCookie("refreshToken", COOKIE_OPTIONS);
       return { error: { status: 401, message: "Authentication error" } };
     }
 
