@@ -11,7 +11,7 @@ const profile = require("../controllers/auth/profile.controller");
 router.post("/register", register);
 router.post("/login", login);
 router.get("/refresh", refresh);
-router.get("/logout", logout);
+router.post("/logout", logout);
 
 router.use(authMiddleware);
 
