@@ -9,7 +9,7 @@ const { doubleCsrfProtection, generateCsrfToken, invalidCsrfTokenError } = doubl
   size: 64,
   ignoredMethods: ["GET", "HEAD", "OPTIONS"],
   getSessionIdentifier: (req) => req.session.id,
-  getTokenFromRequest: (req) => req.headers["x-csrf-token"],
+  getTokenFromRequest: (req) => req.get("x-csrf-token") || req.get("X-CSRF-Token"),
 });
 
 function attachCsrfToken(req, res, next) {
