@@ -18,6 +18,9 @@ function attachCsrfToken(req, res, next) {
 
   res.setHeader("X-CSRF-Token", token);
   res.cookie(CSRF_COOKIE_NAME, token, COOKIE_OPTIONS);
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
 
   next();
 }
