@@ -1,7 +1,7 @@
 const corsConfig = {
   origin: ["http://localhost:5173"],
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type"],
+  allowedHeaders: ["Content-Type", "x-csrf-token"],
   credentials: true,
 };
 
