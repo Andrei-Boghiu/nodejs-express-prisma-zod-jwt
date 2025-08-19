@@ -1,3 +1,5 @@
+const isProd = process.env.NODE_ENV === "production";
+
 const JWT_SECRET = process.env.JWT_SECRET;
 
 const ACCESS_TOKEN_EXPIRES_IN = "1h";
