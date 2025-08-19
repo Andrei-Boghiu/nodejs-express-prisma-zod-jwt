@@ -6,8 +6,15 @@ module.exports = async (req, res) => {
     const userId = req.user.id;
     const { id } = req.params;
 
-    const task = await prisma.task.findUnique({
-      where: { id, userId },
+    const task = await prisma.task.findFirst({
+      where: {
+        id,
+        milestone: {
+          project: {
+            Memberships: { some: { userId, role: { in: ["OWNER", "MANAGER", "CONTRIBUTOR"] } } },
+          },
+        },
+      },
     });
 
     if (!task) {
@@ -15,7 +22,7 @@ module.exports = async (req, res) => {
     }
 
     await prisma.task.delete({
-      where: { id, userId },
+      where: { id },
     });
 
     res.status(204).send();

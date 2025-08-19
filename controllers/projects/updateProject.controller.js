@@ -4,22 +4,32 @@ const { updateProjectSchema } = require("../../validators/project.validator");
 
 module.exports = async (req, res) => {
   try {
-    const ownerId = req.user.id;
+    const userId = req.user.id;
     const { id } = req.params;
     const data = updateProjectSchema.parse(req.body);
 
-    // ? verify ownership before update (e.g., cannot update a project own by another user)
-    const existingProject = await prisma.project.findUnique({
-      where: { id, ownerId },
+    const authorization = await prisma.project.findFirst({
+      where: {
+        id,
+        Memberships: {
+          some: {
+            userId,
+            role: { in: ["OWNER", "MANAGER"] },
+          },
+        },
+      },
     });
 
-    if (!existingProject) {
+    if (!authorization) {
       return res.status(404).json({ error: "Project not found or unauthorized" });
     }
 
     const updatedProject = await prisma.project.update({
-      where: { id, ownerId },
-      data,
+      where: { id },
+      data: {
+        ...data,
+        updatedByUser: { connect: { id: userId } },
+      },
     });
 
     res.json(updatedProject);

@@ -2,10 +2,11 @@ const prisma = require("../../prisma/client");
 const bcrypt = require("bcrypt");
 const { registerSchema } = require("../../validators/auth.validator");
 const handleError = require("../../utils/handleError.util");
+const loginService = require("../../services/login.service");
 
 module.exports = async (req, res) => {
   try {
-    const { email, password } = registerSchema.parse(req.body);
+    const { email, password, ...rest } = registerSchema.parse(req.body);
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -21,13 +22,18 @@ module.exports = async (req, res) => {
       data: {
         email,
         password: hashedPassword,
+        ...rest,
       },
     });
 
-    res.status(201).json({
-      id: user.id,
-      email: user.email,
-    });
+    const { accessToken, refreshToken } = await loginService(user);
+
+    res.setHeader("x-access-token", accessToken);
+    res.setHeader("x-refresh-token", refreshToken);
+
+    const { password: _, ...publicUserObj } = user;
+
+    res.status(201).json(publicUserObj);
   } catch (error) {
     return handleError(error, res, "register.controller");
   }
