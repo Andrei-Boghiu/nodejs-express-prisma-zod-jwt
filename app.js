@@ -16,10 +16,7 @@ const loggerMiddleware = require("./middlewares/logger.middleware");
 const fallbackHandler = require("./utils/fallbackHandler.util");
 
 const corsConfig = require("./configs/cors.config");
-const sessionConfig = require("./configs/session.config");
 const app = express();
-
-app.use(session(sessionConfig));
 
 // middleware
 app.use(loggerMiddleware);
@@ -27,12 +24,6 @@ app.use(rateLimiter);
 app.use(cors(corsConfig));
 app.use(helmet());
 app.use(express.json());
-
-app.get("/api/auth/csrf-token", attachCsrfToken, (req, res) => {
-  res.json({ csrfToken: res.locals.csrfToken });
-});
-
-app.use(doubleCsrfProtection);
 
 // routes
 app.use("/api/auth", authRoutes);
