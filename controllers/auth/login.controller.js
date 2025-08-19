@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const { loginSchema } = require("../../validators/auth.validator");
 const handleError = require("../../utils/handleError.util");
 const { DUMMY_HASH } = require("../../configs/auth.config");
-const { loginService } = require("../../services/login.service");
+const loginService = require("../../services/login.service");
 
 module.exports = async (req, res) => {
   try {
@@ -25,9 +25,13 @@ module.exports = async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const publicUserObject = await loginService(res, user);
+    const { accessToken, refreshToken } = await loginService(user);
 
-    res.json( publicUserObject );
+    res.setHeader("x-access-token", accessToken);
+    res.setHeader("x-refresh-token", refreshToken);
+
+    const { password: _, ...publicUserObject } = user;
+    res.json(publicUserObject);
   } catch (error) {
     return handleError(error, res, "login.controller");
   }
