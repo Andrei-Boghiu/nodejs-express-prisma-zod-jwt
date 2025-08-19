@@ -19,9 +19,9 @@ model User {
     isActive     Boolean  @default(true)
     createdAt    DateTime @default(now())
     updatedAt    DateTime @updatedAt
-    refreshToken String?
 
-    logs Log[]
+    logs          Log[]
+    refreshTokens RefreshToken[]
 
     createdProjects Project[] @relation("ProjectCreatedBy")
     updatedProjects Project[] @relation("ProjectUpdatedBy")
@@ -60,6 +60,16 @@ model Log {
     tag       String? // Optional: custom label (e.g., "security", "system")
 
     createdAt DateTime @default(now())
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RefreshToken {
+    id        String   @id @default(uuid())
+    userId    String
+    token     String   @unique
+    createdAt DateTime @default(now())
+    revoked   Boolean  @default(false)
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

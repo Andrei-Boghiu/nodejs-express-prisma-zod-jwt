@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
-const cookieParser = require("cookie-parser");
-const session = require("express-session");
 
 const authRoutes = require("./routes/auth.routes");
 const userRoutes = require("./routes/user.routes");
@@ -14,7 +12,6 @@ const commentRoutes = require("./routes/comment.routes");
 
 const rateLimiter = require("./middlewares/rateLimiter.middleware");
 const loggerMiddleware = require("./middlewares/logger.middleware");
-const { attachCsrfToken, doubleCsrfProtection, csrfErrorHandler } = require("./middlewares/csrf.middleware");
 
 const fallbackHandler = require("./utils/fallbackHandler.util");
 
@@ -30,7 +27,6 @@ app.use(rateLimiter);
 app.use(cors(corsConfig));
 app.use(helmet());
 app.use(express.json());
-app.use(cookieParser());
 
 app.get("/api/auth/csrf-token", attachCsrfToken, (req, res) => {
   res.json({ csrfToken: res.locals.csrfToken });
@@ -46,8 +42,6 @@ app.use("/api/milestones", milestoneRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/memberships", membershipRoutes);
-
-app.use(csrfErrorHandler);
 
 // fallback route handler
 app.use(fallbackHandler);
