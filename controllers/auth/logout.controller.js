@@ -6,6 +6,10 @@ module.exports = async (req, res) => {
     const userId = req.user?.id;
     const refreshToken = req.headers["x-refresh-token"];
 
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
     if (refreshToken && userId) {
       await prisma.refreshToken.deleteMany({
         where: { token: refreshToken, userId },
