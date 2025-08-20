@@ -1,0 +1,51 @@
+name: Postman CI/CD Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: prisma_client_user
+          POSTGRES_PASSWORD: toor
+          POSTGRES_DB: projects
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U prisma_client_user -d projects"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PORT: 3000
+      JWT_SECRET: your_jwt_secret_key
+      DATABASE_URL: "postgresql://prisma_client_user:toor@localhost:5432/projects"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Wait for PostgreSQL
+        run: sleep 10
+
+      - name: Run Prisma Migrations
+        run: npm run prisma:dev
+
+      - name: Run Postman Collection
+        run: npx newman run tests/postman/postman_collection.json

@@ -1,0 +1,2118 @@
+{
+  "info": {
+    "_postman_id": "d022337a-a0e3-4805-9976-2a327e02e1ad",
+    "name": "NodeJS Server App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "46800264",
+    "_collection_link": "https://andrew-9338873.postman.co/workspace/Andrew's-Workspace~36b22ba7-1743-41f6-89ef-05a0d0a49149/collection/46800264-d022337a-a0e3-4805-9976-2a327e02e1ad?action=share&source=collection_link&creator=46800264"
+  },
+  "item": [
+    {
+      "name": "AUTH",
+      "item": [
+        {
+          "name": "Success: registerUser",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();",
+                  "const newEmail = responseBody.email;",
+                  "",
+                  "if (newEmail) {",
+                  "    pm.collectionVariables.set(\"email\", newEmail);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Randomly decide if middleName and organization will be populated or null",
+                  "const useMiddleName = Math.random() < 0.2;",
+                  "const useOrganization = Math.random() < 0.5;",
+                  "",
+                  "const middleName = useMiddleName ? pm.variables.replaceIn(\"{{$randomFirstName}}\") : null;",
+                  "const organization =  useOrganization ? pm.variables.replaceIn(\"{{$randomCompanyName}}\") : null",
+                  "",
+                  "pm.variables.set(\"middleName\", middleName);",
+                  "pm.variables.set(\"organization\", organization);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"{{password}}\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"middleName\": \"{{middleName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"organization\": \"{{organization}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: getUserProfile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "/**",
+                  " * This test runs immediately after a user registers ",
+                  " * successfully. It verifies that the user is automatically ",
+                  " * authenticated and does not need to log in separately after ",
+                  " * registration.",
+                  " */",
+                  " "
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
+            },
+            "description": "This test runs immediately after a user registers successfully. It verifies that the user is automatically authenticated and does not need to log in separately after registration."
+          },
+          "response": []
+        },
+        {
+          "name": "Success: logoutUser",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Error: getUserProfile - 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "/**",
+                  " * This test runs immediately after a successful logout and ",
+                  " * verifies that the user can no longer access any ",
+                  " * authenticated endpoints or data. ",
+                  "*/"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "profile"]
+            },
+            "description": "This test runs immediately after a successful logout and verifies that the user can no longer access any authenticated endpoints or data."
+          },
+          "response": []
+        },
+        {
+          "name": "Success: loginUser",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: updateUser",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{$randomEmail}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              "const method = pm.request.method;",
+              "const expectSuccess = pm.info.requestName.startsWith(\"Success: \");",
+              "",
+              "const expectedUserSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        id: { type: \"string\" },",
+              "        email: { type: \"string\" },",
+              "        firstName: { type: [\"string\", \"null\"] },",
+              "        middleName: { type: [\"string\", \"null\"] },",
+              "        lastName: { type: [\"string\", \"null\"] },",
+              "        organization: { type: [\"string\", \"null\"] },",
+              "        role: { type: \"string\" },",
+              "        isActive: { type: \"boolean\" },",
+              "        createdAt: { type: \"string\" },",
+              "        updatedAt: { type: \"string\" }",
+              "    },",
+              "    required: [",
+              "        \"id\",",
+              "        \"email\",",
+              "        \"firstName\",",
+              "        \"middleName\",",
+              "        \"lastName\",",
+              "        \"organization\",",
+              "        \"role\",",
+              "        \"isActive\",",
+              "        \"createdAt\",",
+              "        \"updatedAt\"",
+              "    ],",
+              "    additionalProperties: false",
+              "};",
+              "",
+              "if (expectSuccess && [\"GET\", \"PATCH\", \"POST\"].some(m => m === method)) {",
+              "    pm.test(\"Response matches User schema\", () => {",
+              "        pm.response.to.have.jsonSchema(expectedUserSchema);",
+              "    });",
+              "}",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "PROJECTS",
+      "item": [
+        {
+          "name": "Success: createProject - partial",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Project {{$randomAdjective}} {{$randomWord}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: createProject - full",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();",
+                  "const projectId = responseBody.id;",
+                  "",
+                  "if (projectId) {",
+                  "    pm.collectionVariables.set(\"projectId\", projectId);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "function randomPick(array) {",
+                  "    return array[Math.floor(Math.random() * array.length)];",
+                  "}",
+                  "",
+                  "const requestBody = {",
+                  "    name: \"Project {{$randomAdjective}} {{$randomWord}}\",",
+                  "    description: Math.random() < 0.7 ? \"{{$randomLoremParagraph}}\" : null,",
+                  "    priority: randomPick([\"LOW\", \"MEDIUM\", \"HIGH\", \"URGENT\"]),",
+                  "    status: randomPick([\"PLANNING\", \"IN_PROGRESS\", \"COMPLETED\", \"ON_HOLD\", \"CANCELLED\", \"ARCHIVED\"]),",
+                  "    visibility: randomPick([\"PRIVATE\", \"PUBLIC\"]),",
+                  "    startDate: Math.random() < 0.5 ? new Date().toISOString() : null,",
+                  "    endDate: Math.random() < 0.5 ? new Date(Date.now() + Math.floor(Math.random() * 1000*60*60*24*365*2)).toISOString() : null",
+                  "};",
+                  "",
+                  "pm.request.body.raw = JSON.stringify(requestBody);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Error: createProject - payload",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"{{$randomLoremParagraph}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success:PAGES getProjects",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: getProjectById",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: update project",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const updatedProject = {",
+                  "    name: \"Updated Project\", // {{$randomAdjective}} {{$randomWord}}",
+                  "    description: \"Updated\", // {{$randomLoremParagraph}}",
+                  "    priority: [\"LOW\", \"MEDIUM\", \"HIGH\", \"URGENT\"][Math.floor(Math.random() * 4)]",
+                  "};",
+                  "",
+                  "pm.environment.set(\"updatedProject\", JSON.stringify(updatedProject));",
+                  "",
+                  "pm.request.body.raw = JSON.stringify(updatedProject);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const updatedProject = JSON.parse(pm.environment.get(\"updatedProject\"));",
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test(\"Response reflects updated project data\", () => {",
+                  "    pm.expect(response.name).to.eql(updatedProject.name);",
+                  "    pm.expect(response.description).to.eql(updatedProject.description);",
+                  "    pm.expect(response.priority).to.eql(updatedProject.priority);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              "const method = pm.request.method;",
+              "const responseCode = pm.response.code;",
+              "const expectSuccess = pm.info.requestName.startsWith(\"Success: \");",
+              "const expectPagination = pm.info.requestName.startsWith(\"Success:PAGES \");",
+              "",
+              "const projectSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        id: { type: \"string\" },",
+              "        name: { type: \"string\" },",
+              "        description: { type: [\"string\", \"null\"] },",
+              "        priority: { type: \"string\", enum: [\"LOW\",\"MEDIUM\",\"HIGH\",\"URGENT\"] },",
+              "        status: { type: \"string\", enum: [\"PLANNING\",\"IN_PROGRESS\",\"COMPLETED\",\"ON_HOLD\",\"CANCELLED\",\"ARCHIVED\"] },",
+              "        visibility: { type: \"string\", enum: [\"PRIVATE\",\"PUBLIC\"] },",
+              "        startDate: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        endDate: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        createdAt: { type: \"string\", format: \"date-time\" },",
+              "        createdBy: { type: \"string\" },",
+              "        updatedAt: { type: \"string\", format: \"date-time\" },",
+              "        updatedBy: { type: \"string\" },",
+              "        deletedAt: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        deletedBy: { type: [\"string\",\"null\"] },",
+              "        Memberships: { type: \"array\" } // might delete this later",
+              "    },",
+              "    required: [\"name\"],",
+              "    additionalProperties: true // should update this later",
+              "};",
+              "",
+              "const paginationSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        data: { type: \"array\", items: projectSchema },",
+              "        meta: {",
+              "            type: \"object\",",
+              "            properties: {",
+              "                total: { type: \"number\" },",
+              "                page: { type: \"number\" },",
+              "                limit: { type: \"number\" },",
+              "                totalPages: { type: \"number\" }",
+              "            },",
+              "            required: [\"total\",\"page\",\"limit\",\"totalPages\"],",
+              "            additionalProperties: false",
+              "        }",
+              "    },",
+              "    required: [\"data\",\"meta\"],",
+              "    additionalProperties: false",
+              "};",
+              "",
+              "if (expectSuccess && [\"POST\", \"PATCH\"].some(m => m === method)) {",
+              "    pm.test(\"Response matches createProject schema\", () => {",
+              "        pm.response.to.have.jsonSchema(projectSchema);",
+              "    });",
+              "}",
+              "",
+              "if (expectPagination && method == \"GET\") {",
+              "    pm.test(\"Response matches createProject paginated schema\", () => {",
+              "        pm.response.to.have.jsonSchema(paginationSchema);",
+              "    });",
+              "} else if (method == \"GET\") {",
+              "    pm.test(\"Response matches createProject schema\", () => {",
+              "        pm.response.to.have.jsonSchema(projectSchema);",
+              "    });",
+              "}",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "MILESTONES",
+      "item": [
+        {
+          "name": "Success: createMilestone - partial",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Milestone {{$randomWord}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/milestones/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["milestones", "{{projectId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: createMilestone - full",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();",
+                  "const milestoneId = responseBody.id;",
+                  "",
+                  "if (milestoneId) {",
+                  "    pm.collectionVariables.set(\"milestoneId\", milestoneId);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "function randomPick(array) {",
+                  "    return array[Math.floor(Math.random() * array.length)];",
+                  "}",
+                  "",
+                  "const requestBody = {",
+                  "    name: `Milestone {{$randomAdjective}} {{$randomWord}}`,",
+                  "    description: Math.random() < 0.7 ? \"{{$randomLoremParagraph}}\" : null,",
+                  "    status: randomPick([\"PLANNING\", \"IN_PROGRESS\", \"COMPLETED\", \"ON_HOLD\", \"CANCELLED\"]),",
+                  "    startDate: Math.random() < 0.5 ? new Date().toISOString() : null,",
+                  "    endDate: Math.random() < 0.5 ? new Date(Date.now() + Math.floor(Math.random() * 1000*60*60*24*365*2)).toISOString() : null",
+                  "};",
+                  "",
+                  "pm.request.body.raw = JSON.stringify(requestBody);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/milestones/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["milestones", "{{projectId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Error: createMilestone - payload",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"{{$randomLoremParagraph}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/milestones/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["milestones", "{{projectId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success:PAGES getMilestones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/milestones/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["milestones", "{{projectId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: getMilestoneById",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/milestones/id/{{milestoneId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["milestones", "id", "{{milestoneId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: updateMilestone",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const updatedMilestone = {",
+                  "    name: \"Updated Milestone\", // {{$randomAdjective}} {{$randomWord}}",
+                  "    description: \"Updated Milestone\", // {{$randomLoremParagraph}}",
+                  "};",
+                  "",
+                  "pm.environment.set(\"updatedMilestone\", JSON.stringify(updatedMilestone));",
+                  "",
+                  "pm.request.body.raw = JSON.stringify(updatedMilestone);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const updatedMilestone = JSON.parse(pm.environment.get(\"updatedMilestone\"));",
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test(\"Response reflects updated milestone data\", () => {",
+                  "    pm.expect(response.name).to.eql(updatedMilestone.name);",
+                  "    pm.expect(response.description).to.eql(updatedMilestone.description);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/milestones/{{milestoneId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["milestones", "{{milestoneId}}"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              "const method = pm.request.method;",
+              "const responseCode = pm.response.code;",
+              "const expectSuccess = pm.info.requestName.startsWith(\"Success: \");",
+              "const expectPagination = pm.info.requestName.startsWith(\"Success:PAGES \");",
+              "",
+              "const milestoneSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        id: { type: \"string\" },",
+              "        name: { type: \"string\" },",
+              "        description: { type: [\"string\",\"null\"] },",
+              "        supervisorId: { type: [\"string\",\"null\"] },",
+              "        status: { type: \"string\", enum: [\"PLANNING\",\"IN_PROGRESS\",\"COMPLETED\",\"ON_HOLD\",\"CANCELLED\"] },",
+              "        startDate: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        endDate: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        projectId: { type: \"string\" },",
+              "        createdAt: { type: \"string\", format: \"date-time\" },",
+              "        createdBy: { type: \"string\" },",
+              "        updatedAt: { type: \"string\", format: \"date-time\" },",
+              "        updatedBy: { type: \"string\" },",
+              "        deletedAt: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        deletedBy: { type: [\"string\",\"null\"] }",
+              "    },",
+              "    required: [\"name\", \"projectId\"],",
+              "    additionalProperties: true",
+              "};",
+              "",
+              "const paginationSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        data: { type: \"array\", items: milestoneSchema },",
+              "        meta: {",
+              "            type: \"object\",",
+              "            properties: {",
+              "                total: { type: \"number\" },",
+              "                page: { type: \"number\" },",
+              "                limit: { type: \"number\" },",
+              "                totalPages: { type: \"number\" }",
+              "            },",
+              "            required: [\"total\",\"page\",\"limit\",\"totalPages\"],",
+              "            additionalProperties: false",
+              "        }",
+              "    },",
+              "    required: [\"data\",\"meta\"],",
+              "    additionalProperties: false",
+              "};",
+              "",
+              "if (expectSuccess && [\"POST\", \"PATCH\"].includes(method)) {",
+              "    pm.test(\"Response matches Milestone schema\", () => {",
+              "        pm.response.to.have.jsonSchema(milestoneSchema);",
+              "    });",
+              "}",
+              "",
+              "if (expectPagination && method === \"GET\") {",
+              "    pm.test(\"Response matches Milestone paginated schema\", () => {",
+              "        pm.response.to.have.jsonSchema(paginationSchema);",
+              "    });",
+              "} else if (method === \"GET\") {",
+              "    pm.test(\"Response matches Milestone schema\", () => {",
+              "        pm.response.to.have.jsonSchema(milestoneSchema);",
+              "    });",
+              "}",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "TASKS",
+      "item": [
+        {
+          "name": "Success: createTask - partial",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \"title\": \"Task {{$randomWords}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{milestoneId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{milestoneId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: createTask - full",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "function randomPick(array) {",
+                  "    return array[Math.floor(Math.random() * array.length)];",
+                  "}",
+                  "",
+                  "const requestBody = {",
+                  "    title: `Task {{$randomAdjective}} {{$randomWord}}`,",
+                  "    description: Math.random() < 0.7 ? \"{{$randomLoremParagraph}}\" : null,",
+                  "    priority: randomPick([\"LOW\", \"MEDIUM\", \"HIGH\", \"URGENT\"]),",
+                  "    status: randomPick([\"PLANNING\", \"IN_PROGRESS\", \"COMPLETED\", \"ON_HOLD\", \"CANCELLED\"]),",
+                  "    dueDate: Math.random() < 0.5 ? new Date(Date.now() + Math.floor(Math.random() * 1000*60*60*24*365*2)).toISOString() : null",
+                  "};",
+                  "",
+                  "pm.request.body.raw = JSON.stringify(requestBody);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();",
+                  "const taskId = responseBody.id;",
+                  "",
+                  "if (taskId) {",
+                  "    pm.collectionVariables.set(\"taskId\", taskId);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \"title\": \"Task {{$randomWords}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{milestoneId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{milestoneId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Error: createTask - payload",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \"description\": \"{{$randomWords}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{milestoneId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{milestoneId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success:PAGES getTasks",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{milestoneId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{milestoneId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: getTaskById",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/id/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "id", "{{taskId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: updateTask",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const updatedTask = {",
+                  "    title: \"Updated Task\", // {{$randomAdjective}} {{$randomWord}}",
+                  "    description: \"Updated Task\", // {{$randomLoremParagraph}}",
+                  "};",
+                  "",
+                  "pm.environment.set(\"updatedTask\", JSON.stringify(updatedTask));",
+                  "",
+                  "pm.request.body.raw = JSON.stringify(updatedTask);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const updatedTask = JSON.parse(pm.environment.get(\"updatedTask\"));",
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test(\"Response reflects updated task data\", () => {",
+                  "    pm.expect(response.title).to.eql(updatedTask.title);",
+                  "    pm.expect(response.description).to.eql(updatedTask.description);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              "const method = pm.request.method;",
+              "const responseCode = pm.response.code;",
+              "const expectSuccess = pm.info.requestName.startsWith(\"Success: \");",
+              "const expectPagination = pm.info.requestName.startsWith(\"Success:PAGES \");",
+              "",
+              "const taskSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        id: { type: \"string\" },",
+              "        title: { type: \"string\" },",
+              "        description: { type: [\"string\",\"null\"] },",
+              "        priority: { type: \"string\", enum: [\"LOW\",\"MEDIUM\",\"HIGH\",\"URGENT\"] },",
+              "        status: { type: \"string\", enum: [\"PLANNING\",\"IN_PROGRESS\",\"COMPLETED\",\"ON_HOLD\",\"CANCELLED\"] },",
+              "        dueDate: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        assigneeId: { type: [\"string\",\"null\"] },",
+              "        milestoneId: { type: \"string\" },",
+              "        createdAt: { type: \"string\", format: \"date-time\" },",
+              "        createdBy: { type: \"string\" },",
+              "        updatedAt: { type: \"string\", format: \"date-time\" },",
+              "        updatedBy: { type: \"string\" },",
+              "        deletedAt: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        deletedBy: { type: [\"string\",\"null\"] }",
+              "    },",
+              "    required: [\"title\", \"milestoneId\"],",
+              "    additionalProperties: true",
+              "};",
+              "",
+              "const paginationSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        data: { type: \"array\", items: taskSchema },",
+              "        meta: {",
+              "            type: \"object\",",
+              "            properties: {",
+              "                total: { type: \"number\" },",
+              "                page: { type: \"number\" },",
+              "                limit: { type: \"number\" },",
+              "                totalPages: { type: \"number\" }",
+              "            },",
+              "            required: [\"total\",\"page\",\"limit\",\"totalPages\"],",
+              "            additionalProperties: false",
+              "        }",
+              "    },",
+              "    required: [\"data\",\"meta\"],",
+              "    additionalProperties: false",
+              "};",
+              "",
+              "if (expectSuccess && [\"POST\", \"PATCH\"].includes(method)) {",
+              "    pm.test(\"Response matches Task schema\", () => {",
+              "        pm.response.to.have.jsonSchema(taskSchema);",
+              "    });",
+              "}",
+              "",
+              "if (expectPagination && method === \"GET\") {",
+              "    pm.test(\"Response matches Task paginated schema\", () => {",
+              "        pm.response.to.have.jsonSchema(paginationSchema);",
+              "    });",
+              "} else if (method === \"GET\") {",
+              "    pm.test(\"Response matches Task schema\", () => {",
+              "        pm.response.to.have.jsonSchema(taskSchema);",
+              "    });",
+              "}",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "COMMENTS",
+      "item": [
+        {
+          "name": "Success: createComment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseBody = pm.response.json();",
+                  "const commentId = responseBody.id;",
+                  "",
+                  "if (commentId) {",
+                  "    pm.collectionVariables.set(\"commentId\", commentId);",
+                  "}",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \"content\": \"{{$randomLoremParagraph}}\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/comments/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["comments", "{{taskId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: updateComment",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const updatedComment = {",
+                  "    content: \"Updated comment\", // {{$randomAdjective}} {{$randomWord}}",
+                  "};",
+                  "",
+                  "pm.environment.set(\"updatedComment\", JSON.stringify(updatedComment));",
+                  "",
+                  "pm.request.body.raw = JSON.stringify(updatedComment);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const updatedComment = JSON.parse(pm.environment.get(\"updatedComment\"));",
+                  "const response = pm.response.json();",
+                  "",
+                  "pm.test(\"Response reflects updated comment data\", () => {",
+                  "    pm.expect(response.content).to.eql(updatedComment.content);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/comments/{{commentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["comments", "{{commentId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success:PAGES getComments",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/comments/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["comments", "{{taskId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: getCommentById",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/comments/id/{{commentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["comments", "id", "{{commentId}}"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "exec": [
+              "const method = pm.request.method;",
+              "const responseCode = pm.response.code;",
+              "const expectSuccess = pm.info.requestName.startsWith(\"Success: \");",
+              "const expectPagination = pm.info.requestName.startsWith(\"Success:PAGES \");",
+              "",
+              "const commentSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        id: { type: \"string\" },",
+              "        content: { type: \"string\" },",
+              "        taskId: { type: \"string\" },",
+              "        userId: { type: \"string\" },",
+              "        createdAt: { type: \"string\", format: \"date-time\" },",
+              "        createdBy: { type: \"string\" },",
+              "        updatedAt: { type: \"string\", format: \"date-time\" },",
+              "        updatedBy: { type: \"string\" },",
+              "        deletedAt: { type: [\"string\",\"null\"], format: \"date-time\" },",
+              "        deletedBy: { type: [\"string\",\"null\"] }",
+              "    },",
+              "    required: [\"content\", \"taskId\", \"userId\"],",
+              "    additionalProperties: true",
+              "};",
+              "",
+              "const paginationSchema = {",
+              "    type: \"object\",",
+              "    properties: {",
+              "        data: { type: \"array\", items: commentSchema },",
+              "        meta: {",
+              "            type: \"object\",",
+              "            properties: {",
+              "                total: { type: \"number\" },",
+              "                page: { type: \"number\" },",
+              "                limit: { type: \"number\" },",
+              "                totalPages: { type: \"number\" }",
+              "            },",
+              "            required: [\"total\",\"page\",\"limit\",\"totalPages\"],",
+              "            additionalProperties: false",
+              "        }",
+              "    },",
+              "    required: [\"data\",\"meta\"],",
+              "    additionalProperties: false",
+              "};",
+              "",
+              "if (expectSuccess && [\"POST\", \"PATCH\"].includes(method)) {",
+              "    pm.test(\"Response matches Comment schema\", () => {",
+              "        pm.response.to.have.jsonSchema(commentSchema);",
+              "    });",
+              "}",
+              "",
+              "if (expectPagination && method === \"GET\") {",
+              "    pm.test(\"Response matches Comment paginated schema\", () => {",
+              "        pm.response.to.have.jsonSchema(paginationSchema);",
+              "    });",
+              "} else if (method === \"GET\") {",
+              "    pm.test(\"Response matches Comment schema\", () => {",
+              "        pm.response.to.have.jsonSchema(commentSchema);",
+              "    });",
+              "}",
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "_CLEANUP",
+      "item": [
+        {
+          "name": "Success: deleteComment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/comments/{{commentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["comments", "{{commentId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Error: getCommentById - 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Comment not found (404)\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "})",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/comments/id/{{commentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["comments", "id", "{{commentId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: deleteTask",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tasks/{{taskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["tasks", "{{taskId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: deleteMilestone",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/milestones/{{milestoneId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["milestones", "{{milestoneId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Success: deleteProject",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{Authorization}}",
+                "type": "text"
+              },
+              {
+                "key": "x-refresh-token",
+                "value": "{{x-refresh-token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/projects/{{projectId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["projects", "{{projectId}}"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "This isn't an entity folder like the ones before. This is a folder of requests that attempt to delete the previously created resources"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          "const method = pm.request.method;",
+          "const responseCode = pm.response.code;",
+          "const expectSuccess = pm.info.requestName.startsWith(\"Success: \");",
+          "const expectError = pm.info.requestName.startsWith(\"Error: \");",
+          "const expectPagination = pm.info.requestName.startsWith(\"Success:PAGES \");",
+          "",
+          "const accessToken = pm.response.headers.get(\"x-access-token\");",
+          "const refreshToken = pm.response.headers.get(\"x-refresh-token\");",
+          "",
+          "const statusMap = {",
+          "  GET: 200,",
+          "  POST: 201,",
+          "  PUT: 200,",
+          "  PATCH: 200,",
+          "  DELETE: 204,",
+          "  OPTIONS: 204,",
+          "  HEAD: 200,",
+          "};",
+          "",
+          "const expectedStatusCode = statusMap[method];",
+          "",
+          "const paginationSchema = {",
+          "    type: \"object\",",
+          "    properties: {",
+          "        data: { type: \"array\" },",
+          "        meta: {",
+          "            type: \"object\",",
+          "            properties: {",
+          "                total: { type: \"number\" },",
+          "                page: { type: \"number\" },",
+          "                limit: { type: \"number\" },",
+          "                totalPages: { type: \"number\" }",
+          "            },",
+          "            required: [\"total\", \"page\", \"limit\", \"totalPages\"],",
+          "            additionalProperties: false",
+          "        }",
+          "    },",
+          "    required: [\"data\", \"meta\"],",
+          "    additionalProperties: false",
+          "};",
+          "",
+          "// GLOBAL - EVERY",
+          "pm.test(\"Response status code isn't 5xx\", () => {",
+          "  // e.g., endpoints should never return 5xx",
+          "  pm.expect(responseCode).to.not.be.within(500, 599);",
+          "});",
+          "",
+          "pm.test(\"Postman request respects the prefix naming conventions\", () => {",
+          "    const succes = pm.info.requestName.startsWith(\"Success: \");",
+          "    const succesWithPagination = pm.info.requestName.startsWith(\"Success:PAGES \");",
+          "    const error = pm.info.requestName.startsWith(\"Error: \");",
+          "",
+          "    pm.expect(succes || succesWithPagination || error).to.be.true;",
+          "})",
+          "",
+          "if (accessToken && refreshToken) {",
+          "    pm.collectionVariables.set(\"Authorization\", `Bearer ${accessToken}`);",
+          "    pm.collectionVariables.set(\"x-refresh-token\", refreshToken);",
+          "    console.info(\"Authorization and Refresh tokens were updated in collectionVariables\");",
+          "}",
+          "",
+          "if (expectPagination && method === \"GET\") {",
+          "    pm.test(\"Response matches default pagination schema\", () => {",
+          "        pm.response.to.have.jsonSchema(paginationSchema);",
+          "    });",
+          "}",
+          "",
+          "// GLOBAL - EXPECT SUCCESS",
+          "if (expectSuccess && expectedStatusCode) {",
+          "  pm.test(`Response status code is ${statusMap[method]}`, () => {",
+          "    pm.response.to.have.status(expectedStatusCode);",
+          "  });",
+          "} else if (expectSuccess) {",
+          "  console.warn(`No expected status defined for method ${method}`);",
+          "  pm.test(\"Response status isn't error\", () => {",
+          "    pm.expect(responseCode).to.not.be.within(400, 599);",
+          "  });",
+          "}",
+          "",
+          "if (expectSuccess && responseCode !== 204 && method !== \"HEAD\") {",
+          "  pm.test(\"Response body has object or array\", () => {",
+          "    const data = pm.response.json();",
+          "",
+          "    const isArray = Array.isArray(data);",
+          "    const isObject = data !== null && !Array.isArray(data) && typeof data === \"object\";",
+          "",
+          "    pm.expect(isArray || isObject).to.be.true;",
+          "  });",
+          "}",
+          "",
+          "if (expectSuccess && responseCode === 204) {",
+          "    pm.test(\"Response body is empty\", () => {",
+          "        const body = pm.response.text(); ",
+          "        pm.expect(body).to.be.empty;",
+          "    });",
+          "}",
+          "",
+          "// GLOBAL - EXPECT ERROR",
+          "if (expectError) {",
+          "    pm.test(\"Response status code is 4xx\", () => {",
+          "        // e.g., expect error to be handled properly",
+          "        pm.expect(responseCode).to.be.within(400, 499);",
+          "    });",
+          "",
+          "    pm.test(\"Response body has error message\", () => {",
+          "        pm.response.to.have.jsonSchema({",
+          "            oneOf: [",
+          "                {",
+          "                    type: \"object\",",
+          "                    properties: {",
+          "                        error: { type: \"string\" }",
+          "                    },",
+          "                    required: [\"error\"],",
+          "                    additionalProperties: true",
+          "                },",
+          "                {",
+          "                    type: \"object\",",
+          "                    properties: {",
+          "                        errors: { type: \"array\" }",
+          "                    },",
+          "                    required: [\"errors\"],",
+          "                    additionalProperties: true",
+          "                }",
+          "            ]",
+          "        });",
+          "    });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api"
+    },
+    {
+      "key": "email",
+      "value": "jake@example.com"
+    },
+    {
+      "key": "password",
+      "value": "YOUR_PASSWORD",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      }
+    },
+    {
+      "key": "Authorization",
+      "value": "YOUR_ACCESS_TOKEN"
+    },
+    {
+      "key": "x-refresh-token",
+      "value": "YOUR_REFRESH_TOKEN"
+    },
+    {
+      "key": "projectId",
+      "value": "PROJECT_ID"
+    },
+    {
+      "key": "milestoneId",
+      "value": "MILESTONE_ID"
+    },
+    {
+      "key": "taskId",
+      "value": ""
+    },
+    {
+      "key": "commentId",
+      "value": ""
+    }
+  ]
+}

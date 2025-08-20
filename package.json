@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
+    "test": "newman run ./tests/postman/postman_collection.json -e ./tests/postman/postman_environment.json",
     "prisma:dev": "npx prisma migrate reset --force && npx prisma migrate dev --name auto && npx prisma generate",
     "prisma:prod": "npx prisma generate && npx prisma migrate deploy"
   },
