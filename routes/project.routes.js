@@ -15,7 +15,7 @@ router.post("/", createProject);
 router.get("/", getProjects);
 router.get("/search", searchProjects);
 router.get("/:id", getProjectById);
-router.put("/:id", updateProject);
+router.patch("/:id", updateProject);
 router.delete("/:id", deleteProject);
 
 module.exports = router;

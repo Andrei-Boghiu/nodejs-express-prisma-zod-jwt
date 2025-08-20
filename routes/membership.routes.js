@@ -13,7 +13,7 @@ router.use(authMiddleware);
 router.post("/", createMembership);
 router.get("/", getMemberships);
 router.get("/:id", getMembershipById);
-router.put("/:id", updateMembership);
+router.patch("/:id", updateMembership);
 router.delete("/:id", deleteMembership);
 
 module.exports = router;

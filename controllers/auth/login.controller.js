@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
     res.setHeader("x-refresh-token", refreshToken);
 
     const { password: _, ...publicUserObject } = user;
-    res.json(publicUserObject);
+    res.status(201).json(publicUserObject);
   } catch (error) {
     return handleError(error, res, "login.controller");
   }

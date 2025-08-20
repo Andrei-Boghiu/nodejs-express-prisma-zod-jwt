@@ -12,7 +12,7 @@ router.post("/login", login);
 
 router.use(authMiddleware);
 
-router.post("/logout", logout);
+router.delete("/logout", logout);
 router.get("/profile", profile);
 
 module.exports = router;
