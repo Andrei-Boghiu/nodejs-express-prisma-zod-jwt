@@ -13,7 +13,7 @@ router.use(authMiddleware);
 router.post("/:projectId", createMilestone);
 router.get("/:projectId", getMilestones);
 router.get("/id/:id", getMilestoneById);
-router.put("/:id", updateMilestone);
+router.patch("/:id", updateMilestone);
 router.delete("/:id", deleteMilestone);
 
 module.exports = router;

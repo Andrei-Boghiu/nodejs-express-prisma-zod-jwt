@@ -10,6 +10,7 @@ module.exports = async (req, res) => {
     const updatedUser = await prisma.user.update({
       where: { id },
       data,
+      omit: { password: true },
     });
 
     res.json(updatedUser);

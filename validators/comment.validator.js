@@ -4,9 +4,7 @@ const createCommentSchema = z.object({
   content: z.string().min(1, "Comment content is required"),
 });
 
-const updateCommentSchema = z.object({
-  content: z.string().min(1, "Comment content is required"),
-});
+const updateCommentSchema = createCommentSchema;
 
 module.exports = {
   createCommentSchema,

@@ -28,12 +28,7 @@ module.exports = async (req, res) => {
     const [projects, total] = await Promise.all([
       prisma.project.findMany({
         where,
-        include: {
-          Memberships: {
-            select: { role: true, hasAccepted: true },
-          },
-        },
-        orderBy: { id: "asc" },
+        orderBy: { createdAt: "asc" },
         skip,
         take: limit,
       }),

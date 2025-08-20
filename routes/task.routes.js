@@ -13,7 +13,7 @@ router.use(authMiddleware);
 router.post("/:milestoneId", createTask);
 router.get("/:milestoneId", getTasks);
 router.get("/id/:id", getTaskById);
-router.put("/:id", updateTask);
+router.patch("/:id", updateTask);
 router.delete("/:id", deleteTask);
 
 module.exports = router;
