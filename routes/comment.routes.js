@@ -13,7 +13,7 @@ router.use(authMiddleware);
 router.post("/:taskId", createComment);
 router.get("/:taskId", getComments);
 router.get("/id/:id", getCommentById);
-router.put("/:id", updateComment);
+router.patch("/:id", updateComment);
 router.delete("/:id", deleteComment);
 
 module.exports = router;

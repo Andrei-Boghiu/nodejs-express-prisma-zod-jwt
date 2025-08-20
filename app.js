@@ -16,11 +16,12 @@ const loggerMiddleware = require("./middlewares/logger.middleware");
 const fallbackHandler = require("./utils/fallbackHandler.util");
 
 const corsConfig = require("./configs/cors.config");
+
 const app = express();
 
 // middleware
-app.use(loggerMiddleware);
 app.use(rateLimiter);
+app.use(loggerMiddleware);
 app.use(cors(corsConfig));
 app.use(helmet());
 app.use(express.json());
