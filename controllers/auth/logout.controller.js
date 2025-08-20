@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
     res.setHeader("x-access-token", "headers.payload.secret");
     res.setHeader("x-refresh-token", "headers.payload.secret");
 
-    return res.status(204).json({ message: "Logged out successfully" });
+    return res.status(204).end();
   } catch (error) {
     return handleError(error, res, "logout.controller");
   }
