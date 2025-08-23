@@ -12,6 +12,7 @@ const commentRoutes = require("./routes/comment.routes");
 
 const rateLimiter = require("./middlewares/rateLimiter.middleware");
 const loggerMiddleware = require("./middlewares/logger.middleware");
+const fakeLoader = require("./middlewares/fakeLoader.middleware");
 
 const fallbackHandler = require("./utils/fallbackHandler.util");
 
@@ -25,6 +26,7 @@ app.use(loggerMiddleware);
 app.use(cors(corsConfig));
 app.use(helmet());
 app.use(express.json());
+app.use(fakeLoader);
 
 // routes
 app.use("/api/auth", authRoutes);

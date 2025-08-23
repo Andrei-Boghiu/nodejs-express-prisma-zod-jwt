@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const refreshTokens = require("../services/refresh.service");
 
 module.exports = async (req, res, next) => {
-  const authHeader = req.headers["authorization"] || req.headers["Authorization"]; // access token
+  const authHeader = req.headers["Authorization"] || req.headers["authorization"];
   const accessToken = authHeader?.split("Bearer ")[1];
   const refreshToken = req.headers["x-refresh-token"];
 
@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
   try {
     const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
     req.user = { id: decoded.userId, email: decoded.email };
-    next();
+    return next();
   } catch {
     // Access token expired, try refresh token
     const result = await refreshTokens(req);
@@ -22,6 +22,6 @@ module.exports = async (req, res, next) => {
     req.user = result.user;
     res.setHeader("x-access-token", result.accessToken);
     res.setHeader("x-refresh-token", result.refreshToken);
-    next();
+    return next();
   }
 };

@@ -69,7 +69,6 @@ model RefreshToken {
     userId    String
     token     String   @unique
     createdAt DateTime @default(now())
-    revoked   Boolean  @default(false)
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
