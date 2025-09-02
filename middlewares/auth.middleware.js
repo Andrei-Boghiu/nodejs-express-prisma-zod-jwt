@@ -1,8 +1,10 @@
 const jwt = require("jsonwebtoken");
 
+
 module.exports = (req, res, next) => {
   const authHeader = req.headers["Authorization"] || req.headers["authorization"];
   const accessToken = authHeader?.split("Bearer ")[1];
+  const refreshToken = req.headers["x-refresh-token"];
 
   if (!accessToken) {
     return res.status(401).json({ error: "Unauthorized! Missing access token" });
