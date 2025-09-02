@@ -13,6 +13,6 @@ module.exports = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    return handleError(error, res, "refresh.controller");
+    return handleError(error, res, "profile.controller");
   }
 };
